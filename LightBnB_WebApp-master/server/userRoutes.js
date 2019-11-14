@@ -25,7 +25,8 @@ module.exports = function(router, database) {
    */
   const login =  function(email, password) {
     return database.getUserWithEmail(email)
-    .then(user => {
+    .then(result => {
+      const user = result.rows[0];
       if (bcrypt.compareSync(password, user.password)) {
         return user;
       }
@@ -61,7 +62,8 @@ module.exports = function(router, database) {
     }
 
     database.getUserWithId(userId)
-      .then(user => {
+      .then(results => {
+        const user = results.rows[0];
         if (!user) {
           res.send({error: "no user with that id"});
           return;
