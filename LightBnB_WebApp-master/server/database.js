@@ -46,10 +46,9 @@ exports.getUserWithId = getUserWithId;
  */
 const addUser =  function(user) {
   let values = [`${user.name}`, `${user.email}`, `${user.password}`]
-  console.log(values);
   return pool.query(`
-  INSERT INTO users (name, email, password) RETURNING *`, [values])
-  .then (res => console.log(res));
+  INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *`, values)
+  .then (res => res.rows);
 }
 exports.addUser = addUser;
 
@@ -92,6 +91,16 @@ const getAllProperties = function(options, limit = 10) {
     .then(res => res.rows);
 }
 exports.getAllProperties = getAllProperties;
+
+
+// SELECT properties.id, title, cost_per_night, avg(rating) as average_rating
+// FROM properties
+// JOIN property_reviews ON properties.id = property_reviews.property_id
+// WHERE city LIKE '%ancouver%'
+// GROUP BY properties.id
+// HAVING avg(rating) >= 4
+// ORDER BY cost_per_night ASC
+// LIMIT 10;
 
 
 /**
