@@ -132,9 +132,57 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  const queryParams =[];
+  if (property.owner_id) {
+    queryParams.push(`${property.owner_id}`);
+  }
+  if (property.title) {
+    queryParams.push(`${property.title}`);
+  }
+  if (property.description) {
+    queryParams.push(`${property.description}`);
+  }
+  if (property.thumbnail_photo_url) {
+    queryParams.push(`${property.thumbnail_photo_url}`);
+  }
+  if (property.cover_photo_url) {
+    queryParams.push(`${property.cover_photo_url}`);
+  }
+  if (property.cost_per_night) {
+    queryParams.push(`${property.cost_per_night}`);
+  }
+  if (property.parking_spaces) {
+    queryParams.push(`${property.parking_spaces}`);
+  }
+  if (property.number_of_bathrooms) {
+    queryParams.push(`${property.number_of_bathrooms}`);
+  }
+  if (property.number_of_bedrooms) {
+    queryParams.push(`${property.number_of_bedrooms}`);
+  }
+  if (property.country) {
+    queryParams.push(`${property.country}`);
+  }
+  if (property.street) {
+    queryParams.push(`${property.street}`);
+  }
+  if (property.city) {
+    queryParams.push(`${property.city}`);
+  }
+  if (property.province) {
+    queryParams.push(`${property.province}`);
+  }
+  if (property.post_code) {
+    queryParams.push(`${property.post_code}`);
+  }
+
+
+
+  let queryString = `INSERT INTO properties (owner_id, title, description, thumbnail_photo_url, cover_photo_url, cost_per_night, parking_spaces, number_of_bathrooms,number_of_bedrooms,country, street, city,province,post_code)
+  values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`
+  
+  return pool.query(queryString, queryParams)
+  .then (res => res.rows);
+
 }
 exports.addProperty = addProperty;
